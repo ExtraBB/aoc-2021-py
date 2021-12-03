@@ -1,6 +1,4 @@
-import pathlib
-
-input = list(map(lambda line: line.strip(), open(str(pathlib.Path(__file__).parent.resolve()) + "/input")))
+input = open("day3/input").read().strip().split("\n")
 
 bit_length = len(input[0])
 
@@ -18,15 +16,11 @@ def part1(lines):
     return int(gamma, 2) * int(flip(gamma), 2)
 
 def part2(lines):
-    mostCommon = lines
-    leastCommon = lines
+    mostCommon = leastCommon = lines
     for i in range(bit_length):
-        mostCommonBit = mostCommonAt(mostCommon, i)
-        leastCommonBit = flip(mostCommonAt(leastCommon, i))
-        mostCommon = [line for line in mostCommon if line[i] == mostCommonBit] if len(mostCommon) > 1 else mostCommon
-        leastCommon = [line for line in leastCommon if line[i] == leastCommonBit] if len(leastCommon) > 1 else leastCommon
+        mostCommon = [line for line in mostCommon if line[i] == mostCommonAt(mostCommon, i)] if len(mostCommon) > 1 else mostCommon
+        leastCommon = [line for line in leastCommon if line[i] == flip(mostCommonAt(leastCommon, i))] if len(leastCommon) > 1 else leastCommon
     return int(mostCommon[0], 2) * int(leastCommon[0], 2)
-
 
 print(part1(input))
 print(part2(input))

@@ -1,6 +1,4 @@
-import pathlib
-
-lines = list(map(lambda line: line.strip(), open(str(pathlib.Path(__file__).parent.resolve()) + "/input")))
+input = open("day2/input").read().strip().split("\n")
 
 class State:
     def __init__(self, depth, pos, aim):
@@ -25,5 +23,5 @@ def runMoves(lines, actions):
         state = actions[command](state, int(n))
     return state.depth * state.pos
 
-print(runMoves(lines, actions1))
-print(runMoves(lines, actions2))
+print(runMoves(input, actions1))
+print(runMoves(input, actions2))
