@@ -43,12 +43,11 @@ def part1(nums, cards):
                 return calculateResult(card, num)
 
 def part2(nums, cards):
-    winners = set()
     for num in nums:
-        for card in [c for c in cards if c not in winners]:
+        for card in [*cards]:
             if tryFinishCard(card, num):
-                winners.add(card)
-                if len(cards) == len(winners):
+                cards.remove(card)
+                if len(cards) == 0:
                     return calculateResult(card, num)
 
 print(part1(nums, cards))
