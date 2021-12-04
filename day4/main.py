@@ -16,7 +16,7 @@ def parseCard(card):
 cards = [parseCard(card) for card in lines[1:]]
 
 # mark and try to finish line
-def tryFinish(line, num):
+def tryFinishLine(line, num):
     finished = False
     if num in line:
         line.remove(num)
@@ -24,12 +24,12 @@ def tryFinish(line, num):
     return finished
 
 # mark a number on a card
-def nextMove(card, num):
+def tryFinishCard(card, num):
     finished = False
     for row in card.rows:
-        finished |= tryFinish(row, num)
+        finished |= tryFinishLine(row, num)
     for col in card.cols:
-        finished |= tryFinish(col, num)
+        finished |= tryFinishLine(col, num)
     return finished
 
 # calculate result for a winning card
@@ -39,14 +39,14 @@ def calculateResult(card, num):
 def part1(nums, cards):
     for num in nums:
         for card in cards:
-            if nextMove(card, num):
+            if tryFinishCard(card, num):
                 return calculateResult(card, num)
 
 def part2(nums, cards):
     winners = set()
     for num in nums:
         for card in [c for c in cards if c not in winners]:
-            if nextMove(card, num):
+            if tryFinishCard(card, num):
                 winners.add(card)
                 if len(cards) == len(winners):
                     return calculateResult(card, num)
