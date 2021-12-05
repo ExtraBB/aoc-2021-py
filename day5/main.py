@@ -2,10 +2,8 @@ lines = open("day5/input").read().strip().split("\n")
 coords = [line.split(' -> ') for line in lines]
 
 def pointsBetween(c1, c2):
-    minC =  min(c1, c2)
-    maxC = max(c1, c2)
-    nums = [minC + i for i in range(maxC - minC + 1)]
-    return nums if c2 > c1 else list(reversed(nums))
+    direction = 1 if c2 >= c1 else -1
+    return list(range(c1, c2 + direction, direction))
 
 def points(x1, y1, x2, y2):
     pointsBetweenX = pointsBetween(x1, x2)
