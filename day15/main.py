@@ -1,3 +1,7 @@
+from collections import defaultdict
+from math import inf as INFINITY
+import heapq
+
 # Parse input
 lines = open("day15/input").read().strip().split("\n")
 width = len(lines[0])
@@ -5,37 +9,35 @@ height = len(lines)
 
 grid = [int(n) for line in lines for n in line]
 
-# Set up dijkstra variables
-dist = [float("inf") for _ in range(height * width)]
-dist[0] = 0
-prev = [None for _ in range(height * width)]
-Q = set([i for i in range(height * width)])
-
-
 def neighbours(i):
     x = i % width
     y = i // width
 
-    result = []
-    if x - 1 >= 0: result.append(y * width + x - 1)
-    if x + 1 < width: result.append(y * width + x + 1)
-    if y - 1 >= 0: result.append((y - 1) * width + x)
-    if y + 1 < height: result.append((y + 1) * width + x)
-    return result
+    if x - 1 >= 0: yield y * width + x - 1
+    if x + 1 < width: yield y * width + x + 1
+    if y - 1 >= 0: yield (y - 1) * width + x
+    if y + 1 < height: yield (y + 1) * width + x
 
 # Calculate shortest path
-while len(Q) > 0:
-    u = min(Q, key=lambda v: dist[v])
-    Q.remove(u)
+def dijkstra(distances, source, target):
+    dist = defaultdict(lambda: INFINITY, {source: 0})
+    Q = [(0, source)]
+    visited = set()
 
-    if u == len(grid) - 1:
-        break
+    while Q:
+        (u_dist, u) = heapq.heappop(Q)
 
-    for v in neighbours(u):
-        if v in Q:
-            alt = dist[u] + grid[v]
-            if alt < dist[v]:
-                dist[v] = alt
-                prev[v] = u
+        if u == target:
+            return u_dist
+        
+        visited.add(u)
 
-print(dist[len(grid) - 1])
+        for v in neighbours(u):
+            if v not in visited:
+                alt = u_dist + distances[v]
+                if alt < dist[v]:
+                    dist[v] = alt
+                    heapq.heappush(Q, (alt, v))
+
+
+print(dijkstra(grid, 0, width * height - 1))
