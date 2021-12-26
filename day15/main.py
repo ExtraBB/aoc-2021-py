@@ -25,10 +25,13 @@ def dijkstra(distances, source, target):
     visited = set()
 
     while Q:
-        (u_dist, u) = heapq.heappop(Q)
+        u_dist, u = heapq.heappop(Q)
 
         if u == target:
             return u_dist
+
+        if u in visited:
+            continue
         
         visited.add(u)
 
@@ -38,6 +41,25 @@ def dijkstra(distances, source, target):
                 if alt < dist[v]:
                     dist[v] = alt
                     heapq.heappush(Q, (alt, v))
+    
+    return INFINITY
 
 
-print(dijkstra(grid, 0, width * height - 1))
+print(dijkstra(grid, 0, len(grid) - 1))
+
+rows = [[int(n) for n in line] for line in lines]
+
+for _ in range(4):
+    for row in rows:
+        tail = row[-width:]
+        row.extend((int(x) + 1) if int(x) < 9 else 1 for x in tail)
+    
+for _ in range(4):
+	for row in rows[-height:]:
+		rows.append([(x + 1) if x < 9 else 1 for x in row])
+
+grid = [item for row in rows for item in row]
+width *= 5
+height *= 5
+
+print(dijkstra(grid, 0, len(grid) - 1))
